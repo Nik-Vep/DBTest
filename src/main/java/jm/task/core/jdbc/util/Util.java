@@ -1,12 +1,13 @@
 package jm.task.core.jdbc.util;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Util {
     private final static String URL = "jdbc:mysql://localhost:3306/mydbtest";
-    private final static String USERNAME = "root";
+    private final static String USER_NAME = "root";
     private final static String PASSWORD = "root";
     private static volatile Connection connection;
 
@@ -21,7 +22,9 @@ public class Util {
                     localConnection = connection;
                     if (localConnection == null || localConnection.isClosed()) {
                         try {
-                            localConnection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+                            Driver driver = new com.mysql.cj.jdbc.Driver();
+                            DriverManager.registerDriver(driver);
+                            localConnection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
                             connection = localConnection;
                         } catch (SQLException e) {
                             System.out.println("Connection failed: " + e.getMessage());
